@@ -3,13 +3,13 @@ import {
   createBrowserRouter
 } from "react-router-dom";
 import Home from "../component/Home";
-import MyFeedback from "../component/MyFeedback";
 import SubmitFeedback from "../component/SubmitFeedback";
-import Adminanel from "../component/Adminanel";
 import Authlayout from "../layout/Authlayout";
 import Login from "../component/Login";
 import Register from "../component/Register";
 import Error from "../component/Error";
+import AdminPanel from "../component/AdminPanel";
+import Dashboard from "../component/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -17,8 +17,8 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/myfeedback",
-    element: <MyFeedback />,
+    path: "/dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/submitfeedback",
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/adminpanel",
-    element: <Adminanel />,
+    element: <AdminPanel />,
   },
   {
         path: "/auth",

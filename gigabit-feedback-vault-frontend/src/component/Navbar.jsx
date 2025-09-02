@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
-  const newuser = {
-    name: "zubair",
-    role: "admin",
-  };
-  const [user, setUser] = useState(newuser);
+  const { user,setUser } = useContext(UserContext);
+  // const [user, setUser] = useState(newuser);
   const [isOpen, setIsOpen] = useState(false);
 
   const Logout = () => {

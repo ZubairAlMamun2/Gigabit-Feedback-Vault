@@ -1,7 +1,6 @@
 import React from 'react'
-import Navbar from './Navbar'
 
-const MyFeedback = () => {
+const Dashboard = () => {
   return (
     <>
     <Navbar />
@@ -10,4 +9,4 @@ const MyFeedback = () => {
   )
 }
 
-export default MyFeedback
+export default Dashboard

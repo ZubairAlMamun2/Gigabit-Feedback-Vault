@@ -49,6 +49,24 @@ async function run() {
 
 
 
+
+     // Login USER
+      app.get("/loginuser", async (req, res) => {
+    const email = req.query.email;  // e.g. ?email=test@gmail.com
+    try {
+      const user = await employeeDB.findOne({ email: email });
+      if (user) {
+        res.json(user);
+      } else {
+        res.status(404).json({ error: "User not found" });
+      }
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
+
+
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection
