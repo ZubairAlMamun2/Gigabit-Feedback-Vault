@@ -102,7 +102,7 @@ async function run() {
     });
 
     // POST /submit-feedback
-    app.post("/submit-feedback", async (req, res) => {
+    app.post("/submit-feedback", authMiddleware, async (req, res) => {
       try {
         const {
           submitedBy,
@@ -151,6 +151,23 @@ async function run() {
       } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error" });
+      }
+    });
+
+    //get my feedback
+    app.get("/my-feedback", authMiddleware, async (req, res) => {
+      try {
+        const userEmail = req.user.email; // comes from authMiddleware
+
+        const feedbacks = await feedbackDB
+          .find({ submitedTo: userEmail })
+          .toArray();
+
+        console.log(feedbacks);
+
+        res.send(feedbacks);
+      } catch (err) {
+        res.status(500).send({ error: "Failed to fetch feedbacks" });
       }
     });
   } finally {
