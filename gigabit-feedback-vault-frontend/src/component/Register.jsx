@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [error, setError] = useState("");
   const [passtype, setPasstype] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,6 +31,29 @@ const Register = () => {
     }
 
     console.log(user);
+
+    axios
+      .post("http://localhost:5000/createnewuser", user)
+      .then((res) => {
+        if (res.data.acknowledged) {
+          Swal.fire({
+            title: "Success!",
+            text: "User added successfully",
+            icon: "success",
+            confirmButtonText: "Cool",
+          });
+          navigate("/auth/login");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      });
   };
 
   return (
