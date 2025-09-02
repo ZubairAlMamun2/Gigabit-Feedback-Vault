@@ -91,50 +91,62 @@ const Dashboard = () => {
                 Feedback Summary
               </h2>
 
-              
               {feedbacks.length === 0 ? (
                 <p>No feedback received yet.</p>
               ) : (
                 <>
-                {/* Average Ratings */}
-                <div className="bg-gray-800 p-4 rounded-lg mb-6">
-                  <h3 className="text-lg font-medium text-purple-300 mb-2">
-                    Average Ratings
-                  </h3>
-                  <div className="flex justify-between text-sm text-gray-200">
-                    <span>
-                      Communication: {average.communication.toFixed(1)}
-                    </span>
-                    <span>Skill: {average.skill.toFixed(1)}</span>
-                    <span>Initiative: {average.initiative.toFixed(1)}</span>
+                  {/* Average Ratings */}
+                  <div className="bg-gray-800 p-4 rounded-lg mb-6">
+                    <h3 className="text-lg font-medium text-purple-300 mb-2">
+                      Average Ratings
+                    </h3>
+                    <div className="flex justify-between text-sm text-gray-200">
+                      <span>
+                        Communication: {average.communication.toFixed(1)}
+                      </span>
+                      <span>Skill: {average.skill.toFixed(1)}</span>
+                      <span>Initiative: {average.initiative.toFixed(1)}</span>
+                    </div>
                   </div>
-                </div>
 
+                  {/* Received Comments */}
+                  <div className="bg-gray-800 p-4 rounded-lg mb-6">
+                    <h3 className="text-lg font-medium text-purple-300 mb-2">
+                      Received Comments
+                    </h3>
+                    {feedbacks.map((fb, i) => (
+                      <div key={i} className="bg-gray-800 p-4 rounded-lg mb-3">
+                        {/* Comment */}
+                        <p className="text-gray-300 mb-2">
+                          - {fb.comment || "No comment provided"}
+                        </p>
 
-                {/* Received Comments */}
-                <div className="bg-gray-800 p-4 rounded-lg mb-6">
-                  <h3 className="text-lg font-medium text-purple-300 mb-2">
-                Received Comments
-              </h3>
-                  {feedbacks.map((fb, i) => (
-                  <div key={i} >
-                    <p className="text-gray-300 mb-2">-
-                      {fb.comment || "No comment provided"}
-                    </p>
-                    
+                        {/* Sentiment */}
+                        <div className="text-sm font-semibold">
+                          Sentiment:{" "}
+                          <span
+                            className={`${
+                              fb.sentiment === "Positive"
+                                ? "text-green-400"
+                                : fb.sentiment === "Negative"
+                                ? "text-red-400"
+                                : "text-yellow-300"
+                            }`}
+                          >
+                            {fb.sentiment || "Neutral"}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))
-              }
-                </div>
                 </>
               )}
             </div>
 
-
-                        {/* Summary Bar Chart */}
-              <h2 className="text-xl font-semibold text-purple-400 mb-4 mt-12">
-                Bar Chart
-              </h2>
+            {/* Summary Bar Chart */}
+            <h2 className="text-xl font-semibold text-purple-400 mb-4 mt-12">
+              Bar Chart
+            </h2>
             <div className="mb-8 w-full h-64 ">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>

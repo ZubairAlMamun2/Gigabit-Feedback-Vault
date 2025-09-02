@@ -4,6 +4,8 @@ const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const jwt = require("jsonwebtoken");
+const Sentiment = require("sentiment");
+const sentiment = new Sentiment();
 
 const PORT = 5000;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ispqqvs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -134,6 +136,12 @@ async function run() {
           });
         }
 
+        // Analyze sentiment
+        const result = sentiment.analyze(comment || "");
+        let sentimentCategory = "Neutral";
+        if (result.score > 0) sentimentCategory = "Positive";
+        else if (result.score < 0) sentimentCategory = "Negative";
+
         //  Insert feedback
         const feedback = {
           submitedBy,
@@ -142,6 +150,7 @@ async function run() {
           skill,
           initiative,
           comment,
+          sentiment: sentimentCategory,
           createdAt: new Date(),
         };
 
@@ -162,8 +171,6 @@ async function run() {
         const feedbacks = await feedbackDB
           .find({ submitedTo: userEmail })
           .toArray();
-
-        console.log(feedbacks);
 
         res.send(feedbacks);
       } catch (err) {
