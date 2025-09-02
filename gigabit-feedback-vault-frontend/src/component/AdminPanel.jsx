@@ -4,12 +4,13 @@ import { UserContext } from '../context/UserContext';
 
 const AdminPanel = () => {
     const { user } = useContext(UserContext);
-    console.log(user);
+    
+    console.log(user?.name);
   return (
     <>
     <Navbar />
     <div>
-        {/* {user.name} */}
+        {user?.name}
     </div>
     </>
   )

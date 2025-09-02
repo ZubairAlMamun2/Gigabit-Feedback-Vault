@@ -10,7 +10,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [passtype, setPasstype] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { setUser, setToken } = useContext(UserContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,48 +19,41 @@ const Login = () => {
     const email = form.get("email");
     const password = form.get("password");
 
-    const user = { email, password };
-
-    console.log(user);
-
-    // axios
-    //   .get("http://localhost:5000/loginuser", user)
-    //   .then((res) => {
-    //     if (res.data.acknowledged) {
-    //       Swal.fire({
-    //         title: "Success!",
-    //         text: "User added successfully",
-    //         icon: "success",
-    //         confirmButtonText: "Cool",
-    //       });
-    //       navigate("/auth/login");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     Swal.fire({
-    //       title: "Error!",
-    //       text: "Something went wrong",
-    //       icon: "error",
-    //       confirmButtonText: "Ok",
-    //     });
-    //   });
-
     axios
-  .get(`http://localhost:5000/loginuser?email=${encodeURIComponent(email)}`)
-  .then((res) => {
-    setUser(res.data); // user object
-    if(res.data.role=="admin"){
-      navigate('/adminpanel');
-    }
-    else{
-      navigate('/dashboard');
-    }
-  })
-  .catch((err) => {
-    setError(err);
-  });
+      .post("http://localhost:5000/loginuser", { email, password })
+      .then((res) => {
+        const { user, token } = res.data;
+        if (res.data) {
+          Swal.fire({
+            title: "Success!",
+            text: "User LogedIn successfully",
+            icon: "success",
+            confirmButtonText: "Cool",
+          });
+          navigate("/");
+        }
 
+        // Calculate expiry time (1 hour from now)
+        const expiry = new Date().getTime() + 60 * 60 * 1000;
+
+        // Store user, token, and expiry in localStorage
+        localStorage.setItem(
+          "userdata",
+          JSON.stringify({ user, token, expiry })
+        );
+
+        setUser(user); // set in context
+        setToken(token); // set in context
+      })
+      .catch((err) => {
+        setError(err.message);
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      });
   };
 
   return (

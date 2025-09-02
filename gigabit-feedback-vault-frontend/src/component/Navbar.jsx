@@ -4,12 +4,12 @@ import { Menu, X } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
-  const { user,setUser } = useContext(UserContext);
+  const { user,setUser,logout } = useContext(UserContext);
   // const [user, setUser] = useState(newuser);
   const [isOpen, setIsOpen] = useState(false);
 
   const Logout = () => {
-    setUser(null);
+    logout();
   };
 
   const toggleMenu = () => {
