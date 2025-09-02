@@ -1,15 +1,16 @@
 import React, { useContext, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
   const { user,setUser,logout } = useContext(UserContext);
-  // const [user, setUser] = useState(newuser);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate=useNavigate()
 
   const Logout = () => {
     logout();
+    navigate('/')
   };
 
   const toggleMenu = () => {
@@ -29,7 +30,7 @@ const Navbar = () => {
             {user.role == "admin" ? (
               <NavLink to="/adminpanel">Admin Panel</NavLink>
             ) : (
-              <><NavLink to="/myfeedback">Dashboard</NavLink></>
+              <><NavLink to="/dashboard">Dashboard</NavLink></>
             )}
           </>
         ) : (
@@ -93,7 +94,7 @@ const Navbar = () => {
               {user.role == "admin" ? (
                 <NavLink to="/adminpanel">Admin Panel</NavLink>
               ) : (
-                <><NavLink to="/myfeedback">Dashboard</NavLink></>
+                <><NavLink to="/dashboard">Dashboard</NavLink></>
               )}
               <button
                 onClick={Logout}
