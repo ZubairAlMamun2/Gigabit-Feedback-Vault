@@ -6,6 +6,7 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const Sentiment = require("sentiment");
 const sentiment = new Sentiment();
+const { Parser } = require("json2csv");
 
 const PORT = 5000;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ispqqvs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -28,17 +29,24 @@ app.use(
 );
 app.use(express.json());
 
-//creating middleware
+//middleware for authenticion
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(403).json({ error: "No token provided" });
-
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(401).json({ error: "Invalid token" });
     req.user = decoded;
     return;
   });
+  next();
+};
+
+//middleware for admin only
+const adminMiddleware = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Access denied. Admins only." });
+  }
   next();
 };
 
@@ -58,8 +66,16 @@ async function run() {
     // creating new USER
     app.post("/createnewuser", async (req, res) => {
       const user = req.body;
-      console.log("New user:", user);
+
       try {
+        const { email } = user;
+        // Check if already exist
+        const existing = await employeeDB.findOne({ email });
+        if (existing) {
+          return res.status(400).json({
+            error: "You have already Registered.",
+          });
+        }
         const result = await employeeDB.insertOne(user);
         res.send(result);
       } catch (err) {
@@ -91,10 +107,9 @@ async function run() {
       }
     });
 
-    // accessing all employee
+    // accessing all employee, exclude admins
     app.get("/allemployee", authMiddleware, async (req, res) => {
       try {
-        // Fetch only employees, exclude admins
         const cursor = employeeDB.find({ role: { $ne: "admin" } });
         const employeesOnly = await cursor.toArray();
         res.send(employeesOnly);
@@ -103,32 +118,37 @@ async function run() {
       }
     });
 
-    // POST /submit-feedback
+    //submit-feedback
     app.post("/submit-feedback", authMiddleware, async (req, res) => {
       try {
         const {
-          submitedBy,
-          submitedTo,
+          submitedByEmail,
+          submitedToEmail,
+          submitedByName,
+          submitedToName,
           communication,
           skill,
           initiative,
           comment,
         } = req.body;
 
-        if (!submitedBy || !submitedTo) {
+        if (!submitedByEmail || !submitedToEmail) {
           return res
             .status(400)
             .json({ error: "Both users must be specified" });
         }
 
-        if (submitedBy === submitedTo) {
+        if (submitedByEmail === submitedToEmail) {
           return res
             .status(400)
             .json({ error: "You cannot submit feedback to yourself" });
         }
 
-        // Check if already submitted
-        const existing = await feedbackDB.findOne({ submitedBy, submitedTo });
+        //Check if already submitted
+        const existing = await feedbackDB.findOne({
+          submitedByEmail,
+          submitedToEmail,
+        });
 
         if (existing) {
           return res.status(400).json({
@@ -144,8 +164,10 @@ async function run() {
 
         //  Insert feedback
         const feedback = {
-          submitedBy,
-          submitedTo,
+          submitedByEmail,
+          submitedToEmail,
+          submitedByName,
+          submitedToName,
           communication,
           skill,
           initiative,
@@ -158,7 +180,6 @@ async function run() {
 
         res.json({ message: "Feedback submitted successfully" });
       } catch (err) {
-        console.error(err);
         res.status(500).json({ error: "Internal server error" });
       }
     });
@@ -166,10 +187,10 @@ async function run() {
     //get my feedback
     app.get("/my-feedback", authMiddleware, async (req, res) => {
       try {
-        const userEmail = req.user.email; // comes from authMiddleware
+        const userEmail = req.user.email;
 
         const feedbacks = await feedbackDB
-          .find({ submitedTo: userEmail })
+          .find({ submitedToEmail: userEmail })
           .toArray();
 
         res.send(feedbacks);
@@ -177,6 +198,68 @@ async function run() {
         res.status(500).send({ error: "Failed to fetch feedbacks" });
       }
     });
+
+
+
+
+    app.get("/admin/feedbacks", authMiddleware,adminMiddleware, async (req, res) => {
+
+      try {
+
+        const feedbacks = await feedbackDB
+          .find({})
+          .toArray();
+
+        res.send(feedbacks);
+      } catch (err) {
+        res.status(500).send({ error: "Failed to fetch feedbacks" });
+      }
+});
+
+
+
+app.get("/admin/export-feedback", authMiddleware, adminMiddleware, async (req, res) => {
+  const feedbacks = await feedbackDB.find({}).toArray();
+  const fields = [
+  { label: "From", value: "submitedByName" },
+  { label: "To", value: "submitedToName" },
+  { label: "Communication", value: "communication" },
+  { label: "Skill", value: "skill" },
+  { label: "Initiative", value: "initiative" },
+  { label: "Comment", value: "comment" },
+];const parser = new Parser({ fields });
+  const csv = parser.parse(feedbacks);
+
+  res.header("Content-Type", "text/csv");
+  res.attachment("feedbacks.csv");
+  return res.send(csv);
+});
+
+
+
+
+app.get("/admin/summary", authMiddleware,adminMiddleware, async (req, res) => {
+
+  const summary = await feedbackDB.aggregate([
+    {
+      $group: {
+        _id: "$submittedTo",
+        avgCommunication: { $avg: "$communication" },
+        avgSkill: { $avg: "$skill" },
+        avgInitiative: { $avg: "$initiative" },
+        comments: { $push: "$comment" }
+      }
+    }
+  ]).toArray();
+
+  res.json(summary);
+});
+
+
+
+
+
+
   } finally {
   }
 }
@@ -187,5 +270,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server is running at ${PORT} `);
+  console.log(`server is running at http://localhost:${PORT} `);
 });

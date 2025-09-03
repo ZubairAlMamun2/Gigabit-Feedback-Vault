@@ -5,14 +5,14 @@ import { UserContext } from "../context/UserContext";
 import { Loader2 } from "lucide-react";
 import Navbar from "./Navbar";
 import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const SubmitFeedback = () => {
-  const { user, token } = useContext(UserContext);
+  const { user, token,logout } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  // Modal state
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate=useNavigate()
   const [form, setForm] = useState({
     communication: 0,
     skill: 0,
@@ -56,8 +56,10 @@ const SubmitFeedback = () => {
       return;
     }
     console.log({
-          submitedBy: user?.email,
-          submitedTo: selectedUser.email,
+          submitedByEmail: user?.email,
+          submitedToEmail: selectedUser.email,
+          submitedByName: user?.name,
+          submitedToName: selectedUser.name,
           communication: form.communication,
           skill: form.skill,
           initiative: form.initiative,
@@ -68,8 +70,10 @@ const SubmitFeedback = () => {
       await axios.post(
         "http://localhost:5000/submit-feedback",
         {
-          submitedBy: user?.email,
-          submitedTo: selectedUser.email,
+          submitedByEmail: user?.email,
+          submitedToEmail: selectedUser.email,
+          submitedByName: user?.name,
+          submitedToName: selectedUser.name,
           communication: form.communication,
           skill: form.skill,
           initiative: form.initiative,
@@ -89,6 +93,10 @@ const SubmitFeedback = () => {
         err.response?.data?.error || "Failed to submit feedback",
         "error"
       );
+      if(err.response?.data?.error=="Invalid token"){
+          logout();
+          navigate('/');
+        }
       setSelectedUser(null); // close modal
       setForm({ communication: 0, skill: 0, initiative: 0, comment: "" });
     }

@@ -47,14 +47,13 @@ const Register = () => {
       })
       .catch((err) => {
         console.error(err);
-        Swal.fire({
-          title: "Error!",
-          text: "Something went wrong",
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
+        Swal.fire(
+                "Error",
+                err.response?.data?.error || "Failed to create New User",
+                "error"
+              );
       });
-  };
+  }; 
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-900 px-4">

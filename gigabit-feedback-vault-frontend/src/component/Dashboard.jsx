@@ -1,17 +1,3 @@
-// import React from 'react'
-// import Navbar from './Navbar'
-
-// const Dashboard = () => {
-//   return (
-//     <>
-//     <Navbar />
-//     <div>Myfeedback</div>
-//     </>
-//   )
-// }
-
-// export default Dashboard
-
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
@@ -29,14 +15,21 @@ import {
 
 import Navbar from "./Navbar";
 import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const { user, token } = useContext(UserContext);
+  const { user, token,logout } = useContext(UserContext);
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate =useNavigate()
 
   useEffect(() => {
     if (!token || !user?.email) return;
+
+    if(user.role==="admin"){
+       navigate('/adminpanel')
+       return;
+    };
 
     setLoading(true);
     axios
@@ -54,6 +47,10 @@ const Dashboard = () => {
           text: err.response?.data?.error || "Failed to load feedback",
           icon: "error",
         });
+        if(err.response?.data?.error=="Invalid token"){
+          logout();
+          navigate('/');
+        }
       });
   }, [token, user?.email]);
 
@@ -115,10 +112,10 @@ const Dashboard = () => {
                       Received Comments
                     </h3>
                     {feedbacks.map((fb, i) => (
-                      <div key={i} className="bg-gray-800 p-4 rounded-lg mb-3">
+                      <div key={i} className="bg-gray-800 py-4 rounded-lg mb-3">
                         {/* Comment */}
                         <p className="text-gray-300 mb-2">
-                          - {fb.comment || "No comment provided"}
+                          -{fb.comment || "No comment provided"}
                         </p>
 
                         {/* Sentiment */}
@@ -152,7 +149,7 @@ const Dashboard = () => {
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
-                  <YAxis domain={[0, 5]} />
+                  <YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]}/>
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="rating" fill="#8884d8" />
