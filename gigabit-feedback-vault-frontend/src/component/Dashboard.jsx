@@ -68,9 +68,9 @@ const Dashboard = () => {
   }
 
   const chartData = [
-    { category: "Communication", rating: average.communication },
-    { category: "Skill", rating: average.skill },
-    { category: "Initiative", rating: average.initiative },
+    { category: "Communication", rating: average.communication.toFixed(2) },
+    { category: "Skill", rating: average.skill.toFixed(2) },
+    { category: "Initiative", rating: average.initiative.toFixed(2) },
   ];
   return (
     <>

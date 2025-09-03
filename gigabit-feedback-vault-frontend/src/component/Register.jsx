@@ -15,7 +15,7 @@ const Register = () => {
 
     const form = new FormData(e.target);
     const name = form.get("name");
-    const role = "Employee";
+    const role = "employee";
     const email = form.get("email");
     const password = form.get("password");
 
@@ -30,12 +30,12 @@ const Register = () => {
       return;
     }
 
-    console.log(user);
+
 
     axios
       .post("http://localhost:5000/auth/register", user)
       .then((res) => {
-        if (res.data.acknowledged) {
+        if (res.data) {
           Swal.fire({
             title: "Success!",
             text: "User added successfully",
@@ -46,7 +46,7 @@ const Register = () => {
         }
       })
       .catch((err) => {
-        console.error(err);
+        
         Swal.fire(
                 "Error",
                 err.response?.data?.error || "Failed to create New User",

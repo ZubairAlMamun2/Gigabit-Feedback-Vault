@@ -9,8 +9,9 @@ const Navbar = () => {
   const navigate=useNavigate()
 
   const Logout = () => {
+    
     logout();
-    navigate('/')
+    navigate('/');
   };
 
   const toggleMenu = () => {

@@ -1,23 +1,3 @@
-// import React, { useContext } from 'react'
-// import Navbar from './Navbar'
-// import { UserContext } from '../context/UserContext';
-
-// const AdminPanel = () => {
-//     const { user } = useContext(UserContext);
-
-//     console.log(user?.name);
-//   return (
-//     <>
-//     <Navbar />
-//     <div>
-//         {user?.name}
-//     </div>
-//     </>
-//   )
-// }
-
-// export default AdminPanel
-
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -31,6 +11,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
@@ -45,9 +26,9 @@ const AdminPanel = () => {
   // ✅ Load all feedback
   useEffect(() => {
     if (!token || user?.role !== "admin") {
-      navigate('/adminpanel')
-      return};
-
+      
+      return;
+    }
 
     setLoading(true);
     axios
@@ -89,9 +70,9 @@ const AdminPanel = () => {
   }, [token, user]);
 
   const chartData = [
-    { category: "Communication", rating: summary[0]?.avgCommunication },
-    { category: "Skill", rating: summary[0]?.avgSkill },
-    { category: "Initiative", rating: summary[0]?.avgInitiative },
+    { category: "Communication", rating: summary[0]?.avgCommunication.toFixed(2) },
+    { category: "Skill", rating: summary[0]?.avgSkill.toFixed(2) },
+    { category: "Initiative", rating: summary[0]?.avgInitiative.toFixed(2) },
   ];
 
   // ✅ Export CSV
@@ -114,9 +95,6 @@ const AdminPanel = () => {
         Swal.fire("Error", "Failed to export CSV", "error");
       });
   };
-
-
-  
 
   return (
     <>
@@ -168,7 +146,7 @@ const AdminPanel = () => {
                       <p className="mb-2 text-gray-300 italic">
                         "{fb.comment}"
                       </p>
-                      
+
                       <div className="flex justify-between text-xs text-gray-400">
                         <span>Comm: {fb.communication}</span>
                         <span>Skill: {fb.skill}</span>
@@ -188,17 +166,47 @@ const AdminPanel = () => {
               {summary?.length === 0 ? (
                 <p>No summary data available.</p>
               ) : (
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart
-                    data={chartData}
-                    margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-                  >
-                    <XAxis dataKey="category" stroke="#c084fc" />
-                    <YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} />
-                    <Tooltip />
-                    <Bar dataKey="rating" fill="#a78bfa" />
-                  </BarChart>
-                </ResponsiveContainer>
+                <>
+                  {/* Determine Strength and Weakness */}
+                  {(() => {
+                    const { avgCommunication, avgSkill, avgInitiative } =
+                      summary[0];
+                    const metrics = [
+                      { name: "Communication", value: avgCommunication },
+                      { name: "Skill", value: avgSkill },
+                      { name: "Initiative", value: avgInitiative },
+                    ];
+                    const sorted = [...metrics].sort(
+                      (a, b) => b.value - a.value
+                    );
+                    const strength = sorted[0].name;
+                    const weakness = sorted[sorted.length - 1].name;
+                    return (
+                      <div className="mb-2">
+                        <p className="text-green-400">
+                          Team Strength: {strength}
+                        </p>
+                        <p className="text-red-400">
+                          Team Weakness: {weakness}
+                        </p>
+                      </div>
+                    );
+                  })()}
+
+                  <ResponsiveContainer width="100%" height={400}>
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="category" stroke="#c084fc" />
+                      <YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="rating" fill="#a78bfa" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </>
               )}
             </div>
           </>

@@ -11,6 +11,7 @@ router.post("/register", async (req, res) => {
 
     const existing = await Employee.findOne({ email });
     if (existing) return res.status(400).json({ error: "User already exists" });
+    
 
     const newUser = new Employee({ name, email, password, role });
     await newUser.save();
