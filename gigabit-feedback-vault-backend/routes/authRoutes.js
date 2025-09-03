@@ -1,8 +1,15 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Employee = require("../models/Employee");
+const rateLimit = require("express-rate-limit");
 
 const router = express.Router();
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit login attempts
+  message: "Too many login attempts, please try again later.",
+});
 
 // Register
 router.post("/register", async (req, res) => {
@@ -23,7 +30,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
-router.post("/login", async (req, res) => {
+router.post("/login",loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await Employee.findOne({ email });

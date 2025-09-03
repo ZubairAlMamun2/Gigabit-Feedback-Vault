@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./config/db");
+const rateLimit = require("express-rate-limit");
 
 const authRoutes = require("./routes/authRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
@@ -10,6 +11,14 @@ const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Global rate limit (all requests)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per window
+  message: "Too many requests, please try again later.",
+});
+
 
 // Middleware
 app.use(
@@ -20,6 +29,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(apiLimiter);
 
 // Connect MongoDB
 connectDB();

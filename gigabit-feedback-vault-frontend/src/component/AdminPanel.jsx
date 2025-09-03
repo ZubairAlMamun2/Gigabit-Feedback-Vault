@@ -23,7 +23,7 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Load all feedback
+  //  Load all feedback
   useEffect(() => {
     if (!token || user?.role !== "admin") {
       
@@ -53,7 +53,7 @@ const AdminPanel = () => {
       });
   }, [token, user?.email]);
 
-  // ✅ Load summary data
+  //  Load summary data
   useEffect(() => {
     if (!token || user?.role !== "admin") return;
 
@@ -75,7 +75,7 @@ const AdminPanel = () => {
     { category: "Initiative", rating: summary[0]?.avgInitiative.toFixed(2) },
   ];
 
-  // ✅ Export CSV
+  //  Export CSV
   const handleExport = () => {
     axios
       .get("http://localhost:5000/admin/export-feedback", {
