@@ -44,7 +44,10 @@ const AdminPanel = () => {
 
   // ✅ Load all feedback
   useEffect(() => {
-    if (!token || user?.role !== "admin") return;
+    if (!token || user?.role !== "admin") {
+      navigate('/adminpanel')
+      return};
+
 
     setLoading(true);
     axios

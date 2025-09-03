@@ -33,7 +33,7 @@ const Register = () => {
     console.log(user);
 
     axios
-      .post("http://localhost:5000/createnewuser", user)
+      .post("http://localhost:5000/auth/register", user)
       .then((res) => {
         if (res.data.acknowledged) {
           Swal.fire({

@@ -33,7 +33,7 @@ const Dashboard = () => {
 
     setLoading(true);
     axios
-      .get("http://localhost:5000/my-feedback", {
+      .get("http://localhost:5000/feedback/my", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

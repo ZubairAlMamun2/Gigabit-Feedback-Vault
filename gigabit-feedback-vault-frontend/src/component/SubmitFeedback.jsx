@@ -25,7 +25,7 @@ const SubmitFeedback = () => {
 
     setLoading(true);
     axios
-      .get("http://localhost:5000/allemployee", {
+      .get("http://localhost:5000/employees", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -68,7 +68,7 @@ const SubmitFeedback = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/submit-feedback",
+        "http://localhost:5000/feedback/submit",
         {
           submitedByEmail: user?.email,
           submitedToEmail: selectedUser.email,

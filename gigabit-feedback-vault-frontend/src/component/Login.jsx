@@ -20,7 +20,7 @@ const Login = () => {
     const password = form.get("password");
 
     axios
-      .post("http://localhost:5000/loginuser", { email, password })
+      .post("http://localhost:5000/auth/login", { email, password })
       .then((res) => {
         const { user, token } = res.data;
         if (res.data) {
