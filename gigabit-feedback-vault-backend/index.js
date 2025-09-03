@@ -23,7 +23,7 @@ const apiLimiter = rateLimit({
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173" ,"https://gigabit-feedback-vault-2025.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
