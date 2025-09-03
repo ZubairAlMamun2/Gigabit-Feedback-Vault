@@ -58,7 +58,7 @@ const Navbar = () => {
             </Link>
             <Link
               to="/auth/register"
-              className="btn  text-white border-none bg-purple-500 hover:bg-purple-600 rounded-md"
+              className="btn  text-white  bg-gray-800 border border-purple-600 hover:bg-purple-700 rounded-md"
             >
               Register
             </Link>
@@ -114,7 +114,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/auth/register"
-                  className="btn  text-white border-none bg-purple-500 hover:bg-purple-600 rounded-md"
+                  className="btn  text-white  bg-gray-800 border border-purple-600 hover:bg-purple-700 rounded-md"
                 >
                   Register
                 </Link>

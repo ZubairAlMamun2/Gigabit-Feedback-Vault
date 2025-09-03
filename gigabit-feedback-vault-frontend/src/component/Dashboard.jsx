@@ -16,6 +16,7 @@ import {
 import Navbar from "./Navbar";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
 const Dashboard = () => {
   const { user, token,logout } = useContext(UserContext);
@@ -159,6 +160,7 @@ const Dashboard = () => {
           </>
         )}
       </div>
+      <Footer />
     </>
   );
 };

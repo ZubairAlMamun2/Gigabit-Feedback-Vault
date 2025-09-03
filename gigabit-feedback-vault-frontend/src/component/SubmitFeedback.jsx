@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import Navbar from "./Navbar";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
 const SubmitFeedback = () => {
   const { user, token,logout } = useContext(UserContext);
@@ -210,6 +211,7 @@ const SubmitFeedback = () => {
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 };

@@ -104,6 +104,13 @@ const Login = () => {
           >
             Login
           </button>
+
+          <Link
+            to="/"
+            className="w-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-purple-400 font-medium py-2 rounded-md transition border border-purple-500"
+          >
+            Go Back
+          </Link>
         </form>
 
         <p className="text-center text-gray-300 text-sm mt-6">

@@ -5,13 +5,7 @@ import { Outlet } from 'react-router-dom'
 const Authlayout = () => {
   return (
     <div>
-        <header>
-            <Navbar />
-        </header>
-        <main>
-            <Outlet />
-        </main>
-        
+            <Outlet /> 
     </div>
   )
 }

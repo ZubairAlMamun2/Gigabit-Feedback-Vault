@@ -30,8 +30,6 @@ const Register = () => {
       return;
     }
 
-
-
     axios
       .post("http://localhost:5000/auth/register", user)
       .then((res) => {
@@ -46,14 +44,13 @@ const Register = () => {
         }
       })
       .catch((err) => {
-        
         Swal.fire(
-                "Error",
-                err.response?.data?.error || "Failed to create New User",
-                "error"
-              );
+          "Error",
+          err.response?.data?.error || "Failed to create New User",
+          "error"
+        );
       });
-  }; 
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-900 px-4">
@@ -115,6 +112,12 @@ const Register = () => {
           >
             Register
           </button>
+          <Link
+            to="/"
+            className="w-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-purple-400 font-medium py-2 rounded-md transition border border-purple-500"
+          >
+            Go Back
+          </Link>
         </form>
 
         <p className="text-center text-gray-300 text-sm mt-6">

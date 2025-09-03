@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  createBrowserRouter
-} from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "../component/Home";
 import SubmitFeedback from "../component/SubmitFeedback";
 import Authlayout from "../layout/Authlayout";
@@ -29,24 +27,27 @@ const router = createBrowserRouter([
     element: <AdminPanel />,
   },
   {
-        path: "/auth",
-        element:<Authlayout />,
-        children:[
-          {
-              path: "/auth/login",
-              element: <Login />, 
-          },
-          {
-              path: "/auth/register",
-              element: <Register />, 
-          },
-         
-        ]
+    path: "/auth",
+    element: <Authlayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/auth/login" replace />,
       },
       {
-        path: "*",
-        element: <Error />,
+        path: "/auth/login",
+        element: <Login />,
       },
+      {
+        path: "/auth/register",
+        element: <Register />,
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <Error />,
+  },
 ]);
 
 export default router;

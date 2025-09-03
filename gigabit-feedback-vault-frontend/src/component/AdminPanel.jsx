@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
 const AdminPanel = () => {
   const { token, user, logout } = useContext(UserContext);
@@ -212,6 +213,7 @@ const AdminPanel = () => {
           </>
         )}
       </div>
+      <Footer />
     </>
   );
 };
