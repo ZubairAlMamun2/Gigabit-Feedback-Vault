@@ -5,8 +5,15 @@ export const UserContext = createContext();
 
 // Context Provider
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Logged-in user data
-  const [token, setToken] = useState(null); // JWT token
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  //Load theme from localstorage
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   // Load user and token from localStorage on initial render
   useEffect(() => {
@@ -33,9 +40,9 @@ export const UserProvider = ({ children }) => {
         setToken(null);
         localStorage.removeItem("userdata");
         console.log("Token expired: User logged out automatically.");
-      }, 60 * 60 * 1000); // 1 hour in milliseconds
+      }, 60 * 60 * 1000);
 
-      return () => clearTimeout(timer); // cleanup on unmount or token change
+      return () => clearTimeout(timer);
     }
   }, [token]);
 
@@ -43,11 +50,16 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("userdata"); // clear storage
+    localStorage.removeItem("userdata");
   };
+  // Function to change theme
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
   return (
-    <UserContext.Provider value={{ user, setUser, token, setToken, logout }}>
+    <UserContext.Provider
+      value={{ user, setUser, token, setToken, logout, toggleTheme, theme }}
+    >
       {children}
     </UserContext.Provider>
   );

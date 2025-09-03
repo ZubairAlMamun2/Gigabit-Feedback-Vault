@@ -101,7 +101,7 @@ const AdminPanel = () => {
     <>
       <Navbar />
       <div className="p-6 text-white">
-        <h1 className="text-2xl font-bold text-purple-400 mb-6">Admin Panel</h1>
+        <h1 className="text-2xl font-bold text-purple-500 mb-6">Admin Panel</h1>
 
         {/* Export Button */}
         <div className="flex justify-end mb-6">
@@ -116,13 +116,13 @@ const AdminPanel = () => {
         {/* Loading Spinner */}
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <Loader2 className="animate-spin text-purple-400" size={50} />
+            <Loader2 className="animate-spin text-purple-500" size={50} />
           </div>
         ) : (
           <>
             {/* All Feedbacks */}
             <div className="mb-10">
-              <h2 className="text-xl font-semibold text-purple-400 mb-4">
+              <h2 className="text-xl font-semibold text-purple-500 mb-4">
                 All Feedback
               </h2>
               {feedbacks.length === 0 ? (
@@ -136,11 +136,11 @@ const AdminPanel = () => {
                     >
                       <div className="text-sm text-gray-400 mb-2">
                         <p>
-                          <span className="text-purple-400">From:</span>{" "}
+                          <span className="text-purple-500">From:</span>{" "}
                           {fb.submitedByName}
                         </p>
                         <p>
-                          <span className="text-purple-400">To:</span>{" "}
+                          <span className="text-purple-500">To:</span>{" "}
                           {fb.submitedToName}
                         </p>
                       </div>
@@ -161,7 +161,7 @@ const AdminPanel = () => {
 
             {/* Summary Section */}
             <div>
-              <h2 className="text-xl font-semibold text-purple-400 mb-4">
+              <h2 className="text-xl font-semibold text-purple-500 mb-4">
                 Team Strengths & Weaknesses
               </h2>
               {summary?.length === 0 ? (

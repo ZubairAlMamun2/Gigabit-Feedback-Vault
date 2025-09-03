@@ -22,7 +22,7 @@ const Navbar = () => {
       {/*general for big and small screen */}
       <h1 className="text-xl text-white font-bold">Gigabit Feedback Vault</h1>
       {/* Navbar for big-screen start */}
-      <div className="hidden lg:flex flex-1 justify-center items-center space-x-6">
+      <div className="hidden lg:flex flex-1 text-white justify-center items-center space-x-6">
         <NavLink to="/">Home</NavLink>
         {user ? (
           <>

@@ -79,13 +79,13 @@ const Dashboard = () => {
       <div className="p-6">
         {loading ? (
           <div className="flex justify-center min-h-screen items-center h-40">
-            <Loader2 className="animate-spin text-purple-400" size={50} />
+            <Loader2 className="animate-spin text-purple-500" size={50} />
           </div>
         ) : (
           <>
             {/* List of all individual feedbacks */}
             <div>
-              <h2 className="text-xl font-semibold text-purple-400 mb-4">
+              <h2 className="text-xl font-semibold text-purple-500 mb-4">
                 Feedback Summary
               </h2>
 
@@ -95,7 +95,7 @@ const Dashboard = () => {
                 <>
                   {/* Average Ratings */}
                   <div className="bg-gray-800 p-4 rounded-lg mb-6">
-                    <h3 className="text-lg font-medium text-purple-300 mb-2">
+                    <h3 className="text-lg font-medium text-purple-500 mb-2">
                       Average Ratings
                     </h3>
                     <div className="flex justify-between text-sm text-gray-200">
@@ -109,18 +109,18 @@ const Dashboard = () => {
 
                   {/* Received Comments */}
                   <div className="bg-gray-800 p-4 rounded-lg mb-6">
-                    <h3 className="text-lg font-medium text-purple-300 mb-2">
+                    <h3 className="text-lg font-medium text-purple-500 mb-2">
                       Received Comments
                     </h3>
                     {feedbacks.map((fb, i) => (
                       <div key={i} className="bg-gray-800 py-4 rounded-lg mb-3">
                         {/* Comment */}
-                        <p className="text-gray-300 mb-2">
+                        <p className="text-gray-200 mb-2">
                           -{fb.comment || "No comment provided"}
                         </p>
 
                         {/* Sentiment */}
-                        <div className="text-sm font-semibold">
+                        <div className="text-sm text-gray-200 font-semibold">
                           Sentiment:{" "}
                           <span
                             className={`${
@@ -142,7 +142,7 @@ const Dashboard = () => {
             </div>
 
             {/* Summary Bar Chart */}
-            <h2 className="text-xl font-semibold text-purple-400 mb-4 mt-12">
+            <h2 className="text-xl font-semibold text-purple-500 mb-4 mt-12">
               Bar Chart
             </h2>
             <div className="mb-8 w-full h-64 ">
