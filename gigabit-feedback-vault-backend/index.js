@@ -41,9 +41,9 @@ app.use("/feedback", feedbackRoutes);
 app.use("/admin", adminRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Feedback Vault server with Mongoose is running");
+  res.send("Feedback Vault server is running");
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  // console.log(`Server running at http://localhost:${PORT}`);
 });

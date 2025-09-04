@@ -7,13 +7,13 @@ import Navbar from "./Navbar";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import Loading from "./Loading";
 
 const SubmitFeedback = () => {
-  const { user, token,logout } = useContext(UserContext);
+  const { user, token, logout, loading, setLoading } = useContext(UserContext);
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     communication: 0,
     skill: 0,
@@ -21,12 +21,13 @@ const SubmitFeedback = () => {
     comment: "",
   });
 
+  //geting all employee
   useEffect(() => {
     if (!token || !user?.email) return;
 
     setLoading(true);
     axios
-      .get("http://localhost:5000/employees", {
+      .get("https://gigabit-feedback-vault-backend.vercel.app/employees", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -47,6 +48,7 @@ const SubmitFeedback = () => {
 
   // Handle submit feedback
   const handleSubmit = async () => {
+    setLoading(true);
     if (
       !form.communication ||
       !form.skill ||
@@ -54,22 +56,13 @@ const SubmitFeedback = () => {
       !form.comment
     ) {
       Swal.fire("Error", "Please fill in all fields", "error");
+      setLoading(false);
       return;
     }
-    console.log({
-          submitedByEmail: user?.email,
-          submitedToEmail: selectedUser.email,
-          submitedByName: user?.name,
-          submitedToName: selectedUser.name,
-          communication: form.communication,
-          skill: form.skill,
-          initiative: form.initiative,
-          comment: form.comment,
-        })
 
     try {
       await axios.post(
-        "http://localhost:5000/feedback/submit",
+        "https://gigabit-feedback-vault-backend.vercel.app/feedback/submit",
         {
           submitedByEmail: user?.email,
           submitedToEmail: selectedUser.email,
@@ -86,6 +79,7 @@ const SubmitFeedback = () => {
       );
 
       Swal.fire("Success", "Feedback submitted successfully!", "success");
+      setLoading(false);
       setSelectedUser(null); // close modal
       setForm({ communication: 0, skill: 0, initiative: 0, comment: "" });
     } catch (err) {
@@ -94,16 +88,17 @@ const SubmitFeedback = () => {
         err.response?.data?.error || "Failed to submit feedback",
         "error"
       );
-      if(err.response?.data?.error=="Invalid token"){
-          logout();
-          navigate('/');
-        }
+      setLoading(false);
+      if (err.response?.data?.error == "Invalid token") {
+        logout();
+        navigate("/");
+      }
       setSelectedUser(null); // close modal
       setForm({ communication: 0, skill: 0, initiative: 0, comment: "" });
     }
   };
 
-  // Reusable Star Rating Component
+  // Star Rating Component
   const StarRating = ({ field }) => (
     <div className="flex space-x-2">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -122,9 +117,7 @@ const SubmitFeedback = () => {
     <>
       <Navbar />
       {loading ? (
-        <div className="flex justify-center min-h-screen items-center h-40">
-          <Loader2 className="animate-spin text-purple-400" size={50} />
-        </div>
+        <Loading />
       ) : (
         <div className="grid gap-6 px-4 my-6 md:px-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-h-[60vh]">
           {users.map((user) => (
@@ -158,58 +151,66 @@ const SubmitFeedback = () => {
 
       {/* Feedback Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-gray-900 rounded-lg p-6 w-full max-w-lg text-white relative">
-            <h2 className="text-xl font-semibold text-purple-400 mb-4 text-center">
-              Feedback for {selectedUser.name}
-            </h2>
+        <>
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-gray-900 rounded-lg p-6 w-full max-w-lg text-white relative">
+                  <h2 className="text-xl font-semibold text-purple-400 mb-4 text-center">
+                    Feedback for {selectedUser.name}
+                  </h2>
 
-            <div className="space-y-4">
-              <div>
-                <p>Professional Communication:</p>
-                <StarRating field="communication" />
+                  <div className="space-y-4">
+                    <div>
+                      <p>Professional Communication:</p>
+                      <StarRating field="communication" />
+                    </div>
+
+                    <div>
+                      <p>Skill Development:</p>
+                      <StarRating field="skill" />
+                    </div>
+
+                    <div>
+                      <p>Initiative & Ownership:</p>
+                      <StarRating field="initiative" />
+                    </div>
+
+                    <div>
+                      <p>Comment:</p>
+                      <textarea
+                        value={form.comment}
+                        onChange={(e) =>
+                          setForm({ ...form, comment: e.target.value })
+                        }
+                        className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                        rows="3"
+                        placeholder="Write your feedback..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3 mt-6">
+                    <button
+                      onClick={() => setSelectedUser(null)}
+                      className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSubmit}
+                      className="px-4 py-2 bg-purple-500 rounded hover:bg-purple-600 transition"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              <div>
-                <p>Skill Development:</p>
-                <StarRating field="skill" />
-              </div>
-
-              <div>
-                <p>Initiative & Ownership:</p>
-                <StarRating field="initiative" />
-              </div>
-
-              <div>
-                <p>Comment:</p>
-                <textarea
-                  value={form.comment}
-                  onChange={(e) =>
-                    setForm({ ...form, comment: e.target.value })
-                  }
-                  className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
-                  rows="3"
-                  placeholder="Write your feedback..."
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-3 mt-6">
-              <button
-                onClick={() => setSelectedUser(null)}
-                className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 bg-purple-500 rounded hover:bg-purple-600 transition"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
+            </>
+          )}
+        </>
       )}
       <Footer />
     </>

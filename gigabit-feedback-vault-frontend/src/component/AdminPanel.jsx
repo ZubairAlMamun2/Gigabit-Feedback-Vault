@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { UserContext } from "../context/UserContext";
-import { Loader2, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -16,26 +16,26 @@ import {
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import Loading from "./Loading";
 
 const AdminPanel = () => {
-  const { token, user, logout } = useContext(UserContext);
+  const { token, user, logout, loading, setLoading } = useContext(UserContext);
   const [feedbacks, setFeedbacks] = useState([]);
   const [summary, setSummary] = useState([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   //  Load all feedback
   useEffect(() => {
-    if (!token || user?.role !== "admin") {
-      
-      return;
-    }
+    if (!token || user?.role !== "admin") return;
 
     setLoading(true);
     axios
-      .get("http://localhost:5000/admin/feedbacks", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get(
+        "https://gigabit-feedback-vault-backend.vercel.app/admin/feedbacks",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
       .then((res) => {
         setFeedbacks(res.data);
         setLoading(false);
@@ -59,7 +59,7 @@ const AdminPanel = () => {
     if (!token || user?.role !== "admin") return;
 
     axios
-      .get("http://localhost:5000/admin/summary", {
+      .get("https://gigabit-feedback-vault-backend.vercel.app/admin/summary", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -71,7 +71,10 @@ const AdminPanel = () => {
   }, [token, user]);
 
   const chartData = [
-    { category: "Communication", rating: summary[0]?.avgCommunication.toFixed(2) },
+    {
+      category: "Communication",
+      rating: summary[0]?.avgCommunication.toFixed(2),
+    },
     { category: "Skill", rating: summary[0]?.avgSkill.toFixed(2) },
     { category: "Initiative", rating: summary[0]?.avgInitiative.toFixed(2) },
   ];
@@ -79,10 +82,13 @@ const AdminPanel = () => {
   //  Export CSV
   const handleExport = () => {
     axios
-      .get("http://localhost:5000/admin/export-feedback", {
-        headers: { Authorization: `Bearer ${token}` },
-        responseType: "blob",
-      })
+      .get(
+        "https://gigabit-feedback-vault-backend.vercel.app/admin/export-feedback",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "blob",
+        }
+      )
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
@@ -115,9 +121,7 @@ const AdminPanel = () => {
 
         {/* Loading Spinner */}
         {loading ? (
-          <div className="flex justify-center items-center h-40">
-            <Loader2 className="animate-spin text-purple-500" size={50} />
-          </div>
+          <Loading />
         ) : (
           <>
             {/* All Feedbacks */}

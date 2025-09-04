@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "55fb639e-e2c3-479d-9ce2-bde67e03422c",
+		"name": "Gigabit Feedback Vault API",
+		"description": "API Documentation for Gigabit Feedback Vault project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29636444"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"Test123\",\r\n  \"role\": \"Employee\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://gigabit-feedback-vault-backend.vercel.app/auth/register",
+					"protocol": "https",
+					"host": [
+						"gigabit-feedback-vault-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"Test123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://gigabit-feedback-vault-backend.vercel.app/auth/login",
+					"protocol": "https",
+					"host": [
+						"gigabit-feedback-vault-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employees",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://gigabit-feedback-vault-backend.vercel.app/employees",
+					"protocol": "https",
+					"host": [
+						"gigabit-feedback-vault-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Feedback",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"submitedByEmail\": \"user@example.com\",\r\n  \"submitedToEmail\": \"selectedUser@example.com\",\r\n  \"submitedByName\": \"John Doe\",\r\n  \"submitedToName\": \"Jane Smith\",\r\n  \"communication\": 4,\r\n  \"skill\": 5,\r\n  \"initiative\": 3,\r\n  \"comment\": \"Great teamwork, but can improve in deadlines.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://gigabit-feedback-vault-backend.vercel.app/feedback/submit",
+					"protocol": "https",
+					"host": [
+						"gigabit-feedback-vault-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"feedback",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get My Feedbacks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://gigabit-feedback-vault-backend.vercel.app/feedback/my",
+					"protocol": "https",
+					"host": [
+						"gigabit-feedback-vault-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"feedback",
+						"my"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Feedbacks",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Summary Of All Feedbacks",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Export Feedbacks",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

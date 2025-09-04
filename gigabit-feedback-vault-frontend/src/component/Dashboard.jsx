@@ -14,27 +14,27 @@ import {
 } from "recharts";
 
 import Navbar from "./Navbar";
-import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import Loading from "./Loading";
 
 const Dashboard = () => {
-  const { user, token,logout } = useContext(UserContext);
+  const { user, token, logout, loading, setLoading } = useContext(UserContext);
   const [feedbacks, setFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const navigate =useNavigate()
+  const navigate = useNavigate();
 
+  //Load my feedbacks
   useEffect(() => {
     if (!token || !user?.email) return;
 
-    if(user.role==="admin"){
-       navigate('/adminpanel')
-       return;
-    };
+    if (user.role === "admin") {
+      navigate("/adminpanel");
+      return;
+    }
 
     setLoading(true);
     axios
-      .get("http://localhost:5000/feedback/my", {
+      .get("https://gigabit-feedback-vault-backend.vercel.app/feedback/my", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -48,9 +48,9 @@ const Dashboard = () => {
           text: err.response?.data?.error || "Failed to load feedback",
           icon: "error",
         });
-        if(err.response?.data?.error=="Invalid token"){
+        if (err.response?.data?.error == "Invalid token") {
           logout();
-          navigate('/');
+          navigate("/");
         }
       });
   }, [token, user?.email]);
@@ -78,9 +78,7 @@ const Dashboard = () => {
       <Navbar />
       <div className="p-6">
         {loading ? (
-          <div className="flex justify-center min-h-screen items-center h-40">
-            <Loader2 className="animate-spin text-purple-500" size={50} />
-          </div>
+          <Loading />
         ) : (
           <>
             {/* List of all individual feedbacks */}
@@ -150,7 +148,7 @@ const Dashboard = () => {
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
-                  <YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]}/>
+                  <YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="rating" fill="#8884d8" />

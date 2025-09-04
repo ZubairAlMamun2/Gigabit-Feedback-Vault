@@ -4,14 +4,13 @@ import { Menu, X } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
-  const { user,setUser,logout } = useContext(UserContext);
+  const { user, setUser, logout } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const Logout = () => {
-    
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   const toggleMenu = () => {
@@ -21,17 +20,18 @@ const Navbar = () => {
     <nav className="bg-gray-900 shadow-md px-4 py-4 md:px-6 sticky top-0 w-full z-50 flex justify-between items-center">
       {/*general for big and small screen */}
       <h1 className="text-xl text-white font-bold">Gigabit Feedback Vault</h1>
-      {/* Navbar for big-screen start */}
+      {/* Navbar for big-screen start ----->*/}
       <div className="hidden lg:flex flex-1 text-white justify-center items-center space-x-6">
         <NavLink to="/">Home</NavLink>
         {user ? (
           <>
-            
             <NavLink to="/submitfeedback">Submit Feedback</NavLink>
             {user.role == "admin" ? (
               <NavLink to="/adminpanel">Admin Panel</NavLink>
             ) : (
-              <><NavLink to="/dashboard">Dashboard</NavLink></>
+              <>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+              </>
             )}
           </>
         ) : (
@@ -65,9 +65,9 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      {/* Navbar for big-screen end */}
+      {/* Navbar for big-screen end <---------*/}
 
-      {/* Navbar for small-screen start */}
+      {/* Navbar for small-screen start ------>*/}
       <div className="flex space-x-4">
         <div className="lg:hidden">
           <button
@@ -90,16 +90,18 @@ const Navbar = () => {
           </NavLink>
           {user ? (
             <>
-              
               <NavLink to="/submitfeedback">Submit Feedback</NavLink>
               {user.role == "admin" ? (
                 <NavLink to="/adminpanel">Admin Panel</NavLink>
               ) : (
-                <><NavLink to="/dashboard">Dashboard</NavLink></>
+                <>
+                  <NavLink to="/dashboard">Dashboard</NavLink>
+                </>
               )}
               <button
                 onClick={Logout}
-                className="btn bg-red-500 text-white px-3 py-1 w-full">
+                className="btn bg-red-500 text-white px-3 py-1 w-full"
+              >
                 Log Out
               </button>
             </>
@@ -123,7 +125,7 @@ const Navbar = () => {
           )}
         </div>
       )}
-      {/* Navbar for small-screen end */}
+      {/* Navbar for small-screen end <-------*/}
     </nav>
   );
 };

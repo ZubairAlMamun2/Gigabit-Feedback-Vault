@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { UserContext } from "../context/UserContext";
+import Loading from "./Loading";
 
 const Register = () => {
   const [error, setError] = useState("");
   const [passtype, setPasstype] = useState(false);
+  const { loading, setLoading } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const form = new FormData(e.target);
     const name = form.get("name");
@@ -27,13 +32,18 @@ const Register = () => {
       setError(
         "Must have an Uppercase letter,a Lowercase letter and must be at least 6 character"
       );
+      setLoading(false);
       return;
     }
 
     axios
-      .post("http://localhost:5000/auth/register", user)
+      .post(
+        "https://gigabit-feedback-vault-backend.vercel.app/auth/register",
+        user
+      )
       .then((res) => {
         if (res.data) {
+          setLoading(false);
           Swal.fire({
             title: "Success!",
             text: "User added successfully",
@@ -44,6 +54,7 @@ const Register = () => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         Swal.fire(
           "Error",
           err.response?.data?.error || "Failed to create New User",
@@ -54,79 +65,88 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-900 px-4">
-      <div className="bg-gray-800 w-full max-w-md rounded-xl shadow-lg p-8">
-        <h2 className="text-2xl font-semibold text-center text-purple-400 mb-6">
-          Register your account
-        </h2>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="bg-gray-800 w-full max-w-md rounded-xl shadow-lg p-8">
+            <h2 className="text-2xl font-semibold text-center text-purple-400 mb-6">
+              Register your account
+            </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Name */}
-          <div>
-            <label className="block mb-1 text-gray-300">Your Name</label>
-            <input
-              name="name"
-              type="text"
-              placeholder="Your Name"
-              className="input input-bordered w-full rounded-md px-3 py-2"
-              required
-            />
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Name */}
+              <div>
+                <label className="block mb-1 text-gray-300">Your Name</label>
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Your Name"
+                  className="input input-bordered w-full rounded-md px-3 py-2"
+                  required
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block mb-1 text-gray-300">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="input input-bordered w-full rounded-md px-3 py-2"
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="relative">
+                <label className="block mb-1 text-gray-300">Password</label>
+                <input
+                  name="password"
+                  type={passtype ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className="input input-bordered w-full rounded-md px-3 py-2 pr-10"
+                  required
+                />
+                <span
+                  onClick={() => setPasstype(!passtype)}
+                  className="absolute right-3 top-9 cursor-pointer text-gray-400 hover:text-white"
+                >
+                  {passtype ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+
+              {/* Error */}
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 rounded-md transition"
+              >
+                Register
+              </button>
+              <Link
+                to="/"
+                className="w-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-purple-400 font-medium py-2 rounded-md transition border border-purple-500"
+              >
+                Go Back
+              </Link>
+            </form>
+
+            <p className="text-center text-gray-300 text-sm mt-6">
+              Already have an account?{" "}
+              <Link
+                className="text-purple-400 hover:underline"
+                to="/auth/login"
+              >
+                Login
+              </Link>
+            </p>
           </div>
-
-          {/* Email */}
-          <div>
-            <label className="block mb-1 text-gray-300">Email</label>
-            <input
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              className="input input-bordered w-full rounded-md px-3 py-2"
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div className="relative">
-            <label className="block mb-1 text-gray-300">Password</label>
-            <input
-              name="password"
-              type={passtype ? "text" : "password"}
-              placeholder="Enter your password"
-              className="input input-bordered w-full rounded-md px-3 py-2 pr-10"
-              required
-            />
-            <span
-              onClick={() => setPasstype(!passtype)}
-              className="absolute right-3 top-9 cursor-pointer text-gray-400 hover:text-white"
-            >
-              {passtype ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-
-          {/* Error */}
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 rounded-md transition"
-          >
-            Register
-          </button>
-          <Link
-            to="/"
-            className="w-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-purple-400 font-medium py-2 rounded-md transition border border-purple-500"
-          >
-            Go Back
-          </Link>
-        </form>
-
-        <p className="text-center text-gray-300 text-sm mt-6">
-          Already have an account?{" "}
-          <Link className="text-purple-400 hover:underline" to="/auth/login">
-            Login
-          </Link>
-        </p>
-      </div>
+        </>
+      )}
     </div>
   );
 };

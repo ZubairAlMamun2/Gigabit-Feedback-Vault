@@ -1,12 +1,11 @@
 import React, { useEffect, createContext, useState } from "react";
 
-// Create Context
 export const UserContext = createContext();
 
-// Context Provider
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   //Load theme from localstorage
@@ -58,7 +57,17 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, token, setToken, logout, toggleTheme, theme }}
+      value={{
+        user,
+        setUser,
+        token,
+        setToken,
+        logout,
+        toggleTheme,
+        theme,
+        setLoading,
+        loading,
+      }}
     >
       {children}
     </UserContext.Provider>

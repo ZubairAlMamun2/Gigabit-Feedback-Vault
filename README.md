@@ -2,8 +2,9 @@
 
 A task and feedback management system where employees can submit feedback, and admins can analyze team performance.
 
-**Live Demo:** [https://gigabit-feedback-vault-2025.netlify.app/](https://gigabit-feedback-vault-2025.netlify.app/)  
-**GitHub Repository:** [https://github.com/ZubairAlMamun2/Gigabit-Feedback-Vault](https://github.com/ZubairAlMamun2/Gigabit-Feedback-Vault)
+**Live Demo:** 
+- Frontend: [https://gigabit-feedback-vault-2025.netlify.app](https://gigabit-feedback-vault-2025.netlify.app)
+- Backend: [https://gigabit-feedback-vault-backend.vercel.app](https://gigabit-feedback-vault-backend.vercel.app)
 
 ---
 
@@ -40,9 +41,10 @@ A task and feedback management system where employees can submit feedback, and a
 ---
 
 ## Known Issues
+- First Render deployment may take 50–60 seconds to “wake up” if idle.
+- Currently, feedback data is not paginated (all records load at once).
 - ChatGPT auto-summary feature is currently mocked; actual API integration is pending.
-- Drag-and-drop task reordering works, but simultaneous edits may overwrite changes.
-- CORS issues may appear if the frontend URL changes (update `cors` origins in backend).
+- CORS may block requests if backend is not whitelisted correctly.
 - Passwords are stored in plain text (consider hashing before production).
 
 ---
@@ -58,7 +60,6 @@ A task and feedback management system where employees can submit feedback, and a
 ```bash
 cd backend
 npm install
-cp .env.example .env
 # Update .env with your MongoDB URI and JWT_SECRET
 npm run dev
 ```
@@ -68,3 +69,40 @@ cd frontend
 npm install
 npm run dev
 ```
+### Folder Structure
+```bash
+Gigabit-Feedback-Vault/
+│
+├── gigabit-feedback-vault-backend/         # Node.js + Express + Mongoose API
+│   ├── models/                             # Mongoose schemas
+│   ├── config/                             # Database connection
+│   ├── routes/                             # Express routes
+│   ├── middleware/                         # Auth / Admin middlewares
+│   ├── index.js                            # Entry point
+│   ├── .env                                # Environment variables
+│   └── package.json
+│
+├── gigabit-feedback-vault-frontend/        # React + Vite + Tailwind app
+│   ├── src/
+│   │   ├── assets/        
+│   │   ├── component/                      # Reusable UI components
+│   │   ├── layout/                         # Layouts (AuthLayout, etc.)
+│   │   ├── context/                        # Share globaly (User, Theme, etc.)
+│   │   ├── routes/                         # React Router config
+│   │   ├── index.css           
+│   │   └── main.jsx
+│   ├── index.html
+│   └── package.json
+│
+├── docs/                      # Documentation
+│   └── Postman_Collection.json
+│
+├── README.md                  # Project documentation
+└── .gitignore
+
+```
+## API Documentation
+API documentation is available via Postman Collection.
+
+- File: `/docs/Postman_Collection.json`
+- Import into Postman to test all endpoints.
