@@ -119,33 +119,35 @@ const SubmitFeedback = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="grid gap-6 px-4 my-6 md:px-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-h-[60vh]">
-          {users.map((user) => (
-            <div
-              key={user._id}
-              className="relative group bg-gray-800 text-white shadow-xl rounded-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
-            >
-              <div className="card-body relative p-6 flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center text-white text-lg font-bold mb-4">
-                  {user.name.charAt(0)}
+        <div className="min-h-screen">
+          <div className="grid gap-6  px-4 my-6 md:px-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-h-[60vh]">
+            {users.map((user) => (
+              <div
+                key={user._id}
+                className="relative group bg-gray-800 text-white shadow-xl rounded-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+              >
+                <div className="card-body relative p-6 flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center text-white text-lg font-bold mb-4">
+                    {user.name.charAt(0)}
+                  </div>
+
+                  <h2 className="text-purple-400 text-lg font-semibold text-center mb-2">
+                    {user.name}
+                  </h2>
+                  <p className="text-gray-300 text-sm mb-4 text-center">
+                    {user.email}
+                  </p>
+
+                  <button
+                    onClick={() => setSelectedUser(user)}
+                    className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
+                  >
+                    Submit Feedback
+                  </button>
                 </div>
-
-                <h2 className="text-purple-400 text-lg font-semibold text-center mb-2">
-                  {user.name}
-                </h2>
-                <p className="text-gray-300 text-sm mb-4 text-center">
-                  {user.email}
-                </p>
-
-                <button
-                  onClick={() => setSelectedUser(user)}
-                  className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
-                >
-                  Submit Feedback
-                </button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 

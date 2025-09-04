@@ -76,7 +76,7 @@ const Dashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="p-6">
+      <div className="p-6 min-h-screen">
         {loading ? (
           <Loading />
         ) : (

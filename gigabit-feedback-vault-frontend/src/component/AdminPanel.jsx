@@ -106,7 +106,7 @@ const AdminPanel = () => {
   return (
     <>
       <Navbar />
-      <div className="p-6 text-white">
+      <div className="p-6 min-h-screen text-white">
         <h1 className="text-2xl font-bold text-purple-500 mb-6">Admin Panel</h1>
 
         {/* Export Button */}
