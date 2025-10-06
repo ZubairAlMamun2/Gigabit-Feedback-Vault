@@ -61,7 +61,7 @@ A task and feedback management system where employees can submit feedback, and a
 cd backend
 npm install
 # Update .env with your MongoDB URI and JWT_SECRET
-npm run dev
+npm start
 ```
 ### Frontend
 ```bash
